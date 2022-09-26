@@ -36,9 +36,10 @@ var statusZone = document.getElementById('statusZone');
 
 var settingsButton = document.getElementById('settingsButton');
 
+//Use your PubNub account details
 var virtualRemote = new PubNub({
-  publishKey: 'pub-c-62c7c7fd-85b5-41d0-a67f-7e3601a60752',
-  subscribeKey: 'sub-c-4d7062b1-224e-4c5a-bcc4-1e789b5a6d32',
+  publishKey: 'pub-c-xxxxxxxxxxxxxxxxxxxxxx',
+  subscribeKey: 'sub-c-xxxxxxxxxxxxxxxxxxxxx',
   keepAlive: true, // Keep the connection alive
   presenceTimeout: 600, // Don't timeout for 10 minutes
   uuid: 'PexME_Receiver',
