@@ -55,7 +55,7 @@
     <div class="pageContainer" id="pageContainer">
       <div><img class="logo" id="logo" src="assets/images/emptyImage.png" alt=""></img></div>
       
-      <div><img class="footer_logo" id="footer_logo" src="assets/images/footer_logo.png" alt=""></img></div>
+      <div><img class="footer_logo" id="footer_logo" src="assets/images/footer_logo.png" alt="" onclick=""></img></div>
       
       <div class="row homeMessageContainer" id="homeMessageContainer">
         <div class="column"><img id="scanIcon" class="scanIcon" src="assets/images/scanMe.svg" alt=""/></div>
@@ -74,6 +74,45 @@
         <h2 class="date" id="date"></h2>
       </div>
 
+      <div class="newControls">
+        <div>
+          <button id="audioMuteButton" class="btn-square btn-green" onClick="toggleMicMute()" hidden>
+            <i class="fa-solid fa-microphone" style="margin:15px;"></i>
+            Audio
+         </button>
+         </div>
+         
+         <div>
+         <button id="videoMuteButton" class="btn-square btn-blue" onClick="toggleVidMute()" hidden>
+          <i class="fa-solid fa-video" style="margin:15px;"></i>
+            Video
+         </button>
+         </div>
+         
+         <div>
+         <button id="LayoutButton"class="btn-square btn-orange" hidden>
+          <i class="fa-solid fa-expand" style="margin:15px;"></i>
+           Layout
+         </button>
+         </div>
+        
+         <div>
+         <button id="endCallButton" class="btn-square btn-red" onClick="hangup()" hidden>
+          <i class="fa-solid fa-xmark" style="margin:15px;"></i>
+           End Call
+         </button>
+         </div>
+         
+         <div>
+         <button id="settingsButton" class="btn-square btn-black" onClick="showSettings()">
+          <i class="fa-solid fa-gear" style="margin:15px;"></i>
+           Settings
+         </button>
+         </div>
+    
+     </div>
+      
+
       <div class="callContainer" id="callContainer" style="display: none">
         <div class="callVideoContainer">
           <video id="farEndVideo" autoplay="autoplay" poster="assets/images/pexipPoster.jpg"></video>
@@ -82,7 +121,7 @@
           <div class="callVideoControl" onClick="toggleMicMute()">
             <i id="micMute" class="fa-solid fa-microphone"></i>
           </div>
-          <div class="callVideoControl" onClick="toggleVidMute() ">
+          <div class="callVideoControl" onClick="toggleVidMute()">
             <i id="vidMute" class="fa-solid fa-video"></i>
           </div>
           <div class="callVideoControl" onClick="hangup()">
@@ -117,10 +156,8 @@
       <div class="settingsContainer" id="settingsContainer" style="display: none">
         <div class="settingsPopup">
           <div class="settingsPopupTitle">Settings</div>
-          <p id="browserUserAgent" class="browserUserAgent" style="text-align: center"></p>
 
             <div class="settingsPopupContent">
-
 
             <div class="settingsPopupHead">Pexip Infinity Server</div>
             <div class="settingsPopupBody">
@@ -161,13 +198,22 @@
               </select>
             </div>
 
-            <div class="settingsPopupHead">Local Layout (Not implemented)</div>
+            <div class="settingsPopupHead">Local Layout*</div>
             <div class="settingsPopupBody">
               <select name="pexLayout" id="pexLayout" value=1>
                 <option value=1 selected="Layout 1 (Far-end with self-view)">Layout 1 (Far-end with self-view)</option>
                 <option value=2 >Layout 2 (Far-end only)</option>
                 <option value=3>Layout 3 (Self-view only)</option>
               </select>
+            </div>
+
+            <div class="settingsPopupHead">Advanced Options*</div>
+            <div>
+              <input type="checkbox" id="chatReceive" class="optionsCheckbox" name="chatReceive" disabled checked>Enable Chat Receive (Pexip Meetings)</input>
+              <input type="checkbox" id="showMediaStatistics" class="optionsCheckbox" name="showMediaStatistics" disabled checked>Show Media Statistics</input>
+              <input type="checkbox" id="disableVp9" class="optionsCheckbox" name="disableVp9" disabled checked>Disable VP9 Video Codec</input>
+              <input type="checkbox" id="disableVp8" class="optionsCheckbox" name="disableVp8" disabled >Disable VP8 Video Codec</input>
+            
             </div>
 
             <div class="settingsPopupHead">Maximum Call Rate (kbps)</div>
@@ -180,14 +226,14 @@
               </select>
             </div>
 
-            <div class="settingsPopupHead">Video Device*</div>
+            <div class="settingsPopupHead">Video Device</div>
             <div class="settingsPopupBody">
               <select name="videoDevices" id="videoDevices" class="videoDevices" onchange="savePexipVideoDeviceID(this.value)">
                 <option value="loading">Loading...</option>
               </select>
             </div>
 
-            <div class="settingsPopupHead">Audio Device*</div>
+            <div class="settingsPopupHead">Audio Device</div>
             <div class="settingsPopupBody">
               <select name="audioDevices" id="audioDevices" class="audioDevices" onchange="savePexipAudioDeviceID(this.value)">
                 <option value="loading">Loading...</option>
@@ -206,13 +252,21 @@
             </div>
             <div></div>
             <div class="settingsNotes" width="95%">
-              To use this application a camera and microphone must be connected and device permissions granted.  
-              Content is delivered via presentation-in-mix (co-mingled video + content channel).
-              Configuration QR can be generated by pasting clipboard text into a online QR generator.<br>
-              This is not a supported application and utilises 3rd party for QR and virtual remote control (IOT).
-              Built from sample at https://developer.pexip.com | greg.walker@pexip.com | v1.0.0.12 (Beta) | 8-SEP-2022
+              The web application requires Pexip Infinity v30 or above for full functionaility.<br>
+              A supported camera and microphone must be connected and device permissions granted.<br> 
+              Device selection is not available on AndroidTV.<br> 
+              Content is delivered via presentation-in-mix a co-mingled video+content channel.<br>
+              A configuration QR must be exported from a desktop browser for use with a 3rd party QR generator.<br>
+              This is not a supported application and utilises 3rd party libaries and services including;<br>
+              PUBNUB IOT (Virtual Remote), TOASTIFY notifications and ZXING QR reader.<br>
+              This application was developed from sample at https://developer.pexip.com so please check it out.<br>
+              *Not currently (fully) implemented.<br>
+              greg.walker@pexip.com - v1.0.0.15 (15-SEP-2022)<br>
+              <br>
             </div>
-    
+            <div id="browserLanguage" class="browserLanguage" ></div>
+            <div id="browserUserAgent" class="browserUserAgent" ></div>
+           
           </div>
         </div>
       </div>

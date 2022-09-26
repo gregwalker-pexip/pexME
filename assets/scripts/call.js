@@ -1,4 +1,4 @@
-// The far end video element
+// The far end video elementpexRTC.renegotiate
 var farEndVideo = document.getElementById('farEndVideo');
 // The self view video element
 var selfViewVideo = document.getElementById('selfViewVideo');
@@ -17,12 +17,21 @@ window.addEventListener('load', function (e) {
   pexRTC.onDisconnect = callDisconnected;
   // Link the callDisconnected method to the onError callback
   pexRTC.onError = callError;
+  // Link the onChatMessage to the getMessage callback
+  pexRTC.onChatMessage = getMessage;
+
 });
 
 window.addEventListener('beforeunload', function (e) {
   // Disconnect the call
   pexRTC.disconnect();
+
+  //Stop QR Scanner Process (Not to self: need to validate this!)
+  scanStop=true;
+
+  //Stop PubNub IOT Services
   virtualRemote.unsubscribeAll();
+
 });
 
 // This method is called when the call is setting up
@@ -62,6 +71,16 @@ function callSetup(stream, pinStatus) {
 
   // Call the ui navigateToCall method to change the visible div's
   navigateToCall();
+}
+
+//On Chat Message
+function getMessage(message) {
+  showChatToast(message.origin + ':  ' + message.payload, 30000);
+   console.log ("Chat Message: ", message.origin, message.payload);
+
+   var statistics = JSON.stringify(pexRTC.getMediaStatistics(), null, 2);
+   console.log ("Media Statistics:", statistics);
+
 }
 
 // When the call is connected

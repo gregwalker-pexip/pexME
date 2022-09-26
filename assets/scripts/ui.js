@@ -11,6 +11,8 @@ let customHomeMessage = getStorage('customHomeMessage');
 var inCall = false;
 var channelID;
 
+var scanStop=false;
+
 var preflightContainer = document.getElementById('preflightContainer');
 var callContainer = document.getElementById('callContainer');
 var callPinRequestContainer = document.getElementById('callPinRequestContainer');
@@ -131,6 +133,8 @@ function updateVideoMuteState(vidState) {
 
 function showSettings() {
   settingsContainer.style.display = 'flex';
+  debugLog('User clicked show settings');
+  //  showToast('Configuration Settings', 2000);
 }
 
 function hideSettings() {
@@ -156,6 +160,7 @@ window.location.reload();
 }
 }
 
+// Used for testing only
 function closeSettingsWithoutRestart() {
   hideSettings();
 }
@@ -164,14 +169,30 @@ function showToast(msg, duration) {
   Toastify({
     text: msg,
     duration: duration,
+    class: "showToast",
     close: false,
-    gravity: 'bottom', // `top` or `bottom`
-    position: 'left', // `left`, `center` or `right`
-    className: 'info',
+    gravity: 'top', // `top` or `bottom`
+    position: 'right', // `left`, `center` or `right`
+    stopOnFocus: false, // Prevents dismissing of toast on hover
     style: {
-      backgroundColor: 'linear-gradient(to right, #00B0F0, #00B0F0)',
-      borderRadius: '10px',
-      fontSize: '2.5vh',
+      backgroundColor: 'linear-gradient(to right, #00B0F0AO, #00B0F0AO)',
+      borderRadius: '5px',
+    },
+  }).showToast();
+}
+
+
+function showChatToast(msg, duration) {
+  Toastify({
+    text: msg,
+    duration: duration,
+    class: "showToast",
+    close: false,
+    gravity: "bottom", // `top` or `bottom`
+    position: "center", // `left`, `center` or `right`
+    stopOnFocus: false, // Prevents dismissing of toast on hover
+    style: {
+      background: "linear-gradient(to right, #000000A0, #000000A0)",
     },
   }).showToast();
 }
@@ -254,8 +275,8 @@ function decodeOnce(codeReader, selectedDeviceId) {
           debugLog('Meeting ID:', myQR.meeting);
           debugLog('Name:', myQR.name);
           debugLog('Session:', myQR.session);
-          debugLog('Attempting call:', myQR.name + ' 👉 ' + myQR.meeting);
-          showToast(myQR.name + ' 👉 ' + myQR.meeting, 4000);
+          debugLog('Attempting call:', myQR.name + ' ▶️ ' + myQR.meeting);
+          showToast(myQR.name + ' ▶️ ' + myQR.meeting, 4000);
 
           if (inCall === false) {
             callSelfviewContainer.style.outline =
@@ -304,6 +325,10 @@ window.addEventListener('load', function () {
 
 function scanQR() {
   let selectedDeviceId;
+  
+ if (scanStop===true)  {
+  console.log ("ScanQR stopped!");
+  return};
 
   codeReader
     .getVideoInputDevices()
@@ -313,11 +338,10 @@ function scanQR() {
 
       decodeOnce(codeReader, selectedDeviceId);
       debugLog('Started QR scanner on camera id: ', selectedDeviceId);
-      Toastify('Started QR scanner on camera id: ' + selectedDeviceId);
     })
     .catch((err) => {
       console.error(err);
-      Toastify('QR device error: ' + err);
+      showToast('QR device error: ' + err);
     });
 }
 
@@ -383,7 +407,7 @@ function checkTabFocused() {
 function testCall() {
   closeSettingsWithoutRestart();
   let testCall = 'test';
-  Toastify('Placing test call to ' + testCall, 8000);
+  showToast('Placing test call to ▶️ ' + testCall, 8000);
   connectCall(testCall, 'PexMe', maxCallRate);
 }
 
@@ -397,9 +421,15 @@ function exportQRConfig() {
     customHomeMessage: customHomeMessage,
   };
 
+
+
   var qrConfig = JSON.stringify(myObj);
-  debugLog('Export QR configuration:', qrConfig);
+  
   navigator.clipboard.writeText(qrConfig);
+  debugLog('Export QR configuration:', qrConfig);
+
+  showToast('QR configuration data has been copied to clipboard. \n Please use with a 3rd party QR code generator.', 10000);
+  
 }
 
 //ON LOAD
@@ -408,9 +438,14 @@ window.addEventListener('load', (event) => {
 
   //Get Browser Version
   var browserUserAgent = document.getElementById('browserUserAgent');
+  var browserLanguage = document.getElementById('browserLanguage');
+
   const { userAgent } = navigator;
   debugLog(userAgent);
-  browserUserAgent.innerHTML = userAgent;
+  debugLog("Language:", navigator.languages);
+
+  browserUserAgent.innerHTML = "Browser version: " + userAgent;
+  browserLanguage.innerHTML = "Language: " + navigator.languages;
 
   if (userAgent.includes("Android")){
     document.getElementById('audioDevices').disabled = true;

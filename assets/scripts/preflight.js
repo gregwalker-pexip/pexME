@@ -131,5 +131,8 @@ function connectCall(dialURI, participantName, maxCallRate) {
   pexRTC.audio_device = audioDeviceId;
   pexRTC.video_source = videoDeviceId;
 
+//Disable VP9 video codec
+  pexRTC.vp9_enabled = false;
+
   pexRTC.makeCall(server, dialURI, participantName, maxCallRate);
 }
