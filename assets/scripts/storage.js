@@ -15,7 +15,7 @@ function checkStorage() {
     setStorage('maxCallRate', 2464);
     setStorage('maxCallDuration', 0);
     setStorage('deviceName', 'pexme.demo');
-    setStorage('server', 'pexip.vc');
+    setStorage('server', '');
     setStorage('logoURL', '');
     setStorage('backgroundUrl', '');
   }
