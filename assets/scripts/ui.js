@@ -36,7 +36,7 @@ var statusZone = document.getElementById('statusZone');
 
 var settingsButton = document.getElementById('settingsButton');
 
-//Use your PubNub account details
+//Use your PubNub account details.  Details must match PexQr companion application
 var virtualRemote = new PubNub({
   publishKey: 'pub-c-xxxxxxxxxxxxxxxxxxxxxx',
   subscribeKey: 'sub-c-xxxxxxxxxxxxxxxxxxxxx',
